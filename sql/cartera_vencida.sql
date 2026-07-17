@@ -1,0 +1,92 @@
+WITH CREDITOS_SAC AS (
+    SELECT
+        ASO_IDENTIFICACION,
+        CASE
+            WHEN LENGTH(PAGARE) = 8 THEN SUBSTR(PAGARE, 1, 7) || '0'
+            ELSE                         SUBSTR(PAGARE, 1, 8) || '00'
+        END AS NUMERO_CREDITO,
+        ESTADO_CREDITO
+    FROM STG_GCC_SAC_INFOOBL
+    WHERE PRODUCTO IN (
+        'CRESOLID', 'CREDIASO', 'CRPATRIM', 'CRCUOINI',
+        'CR.LI.M',  'CR.LIBRM', 'REESTCRS', 'CR.EDUCM'
+    )
+),
+CXCCRED AS (
+    SELECT
+        F.ASO_IDENTIFICACION AS CEDULA,
+        SUM(F.FACT_VALOR_CUOTA_MES) AS VALOR_FACTURADO
+    FROM STG_GCC_FACTURACION F
+    WHERE
+        F.CON_CODIGO = 'CXCCRED'
+    GROUP BY
+        F.ASO_IDENTIFICACION
+    HAVING
+        SUM(F.FACT_VALOR_CUOTA_MES) > 0
+), 
+
+BASE AS (
+    SELECT
+        F.ASO_IDENTIFICACION                                AS CEDULA,
+        A.ASO_PRIMER_NOMBRE   || ' ' ||
+        A.ASO_SEGUNDO_NOMBRE  || ' ' ||
+        A.ASO_PRIMER_APELLIDO || ' ' ||
+        A.ASO_SEGUNDO_APELLIDO                              AS NOMBRE_ASOCIADO,
+        C.COR_DIA_CORTE                                     AS CORTE,
+        E.ESTM_NOMBRE,
+        CASE
+            WHEN LENGTH(F.FACT_NUMERO_PAGARE) = 8
+                THEN SUBSTR(F.FACT_NUMERO_PAGARE, 1, 7) || '0'
+            ELSE     SUBSTR(F.FACT_NUMERO_PAGARE, 1, 8) || '00'
+        END                                                 AS NUMERO_CREDITO,
+        F.CON_CODIGO                                        AS TIPO_CREDITO,
+        F.FACT_DIAS_DE_MORA                                 AS DIAS_MORA,
+        F.FACT_VALOR_VENCIDO                                AS VALOR_VENCIDO,
+        I.ESTADO_CREDITO,
+        CX.VALOR_FACTURADO AS VALOR_FACTURADO_CXCRED, 
+        ROW_NUMBER() OVER (
+            PARTITION BY
+                F.ASO_IDENTIFICACION,
+                F.CON_CODIGO,
+                CASE
+                    WHEN LENGTH(F.FACT_NUMERO_PAGARE) = 8
+                        THEN SUBSTR(F.FACT_NUMERO_PAGARE, 1, 7) || '0'
+                    ELSE     SUBSTR(F.FACT_NUMERO_PAGARE, 1, 8) || '00'
+                END
+            ORDER BY
+                CASE WHEN I.ESTADO_CREDITO IS NOT NULL THEN 0 ELSE 1 END
+        )                                                   AS RN
+    FROM STG_GCC_FACTURACION F
+    INNER JOIN GCC_ASOCIADO A
+        ON  F.ASO_IDENTIFICACION = A.ASO_IDENTIFICACION
+    INNER JOIN GCC_CORTE_FACTURACION C
+        ON  F.COR_NUMERO_CORTE = C.COR_NUMERO_CORTE
+    INNER JOIN GCC_ESTADOS_MULTIACTIVA E
+        ON  A.ESTM_CODIGO = E.ESTM_CODIGO
+    LEFT JOIN CREDITOS_SAC I
+        ON  F.ASO_IDENTIFICACION = I.ASO_IDENTIFICACION
+        AND CASE
+                WHEN LENGTH(F.FACT_NUMERO_PAGARE) = 8
+                    THEN SUBSTR(F.FACT_NUMERO_PAGARE, 1, 7) || '0'
+                ELSE     SUBSTR(F.FACT_NUMERO_PAGARE, 1, 8) || '00'
+            END = I.NUMERO_CREDITO
+    LEFT JOIN CXCCRED CX
+        ON F.ASO_IDENTIFICACION = CX.CEDULA
+    WHERE F.CON_CODIGO IN (
+        'CRESOLID', 'CREDIASO', 'CRPATRIM', 'CRCUOINI',
+        'CR.LI.M',  'CR.LIBRM', 'REESTCRS', 'CR.EDUCM'
+    )
+)
+SELECT
+    CEDULA,
+    NOMBRE_ASOCIADO,
+    CORTE,
+    ESTM_NOMBRE,
+    NUMERO_CREDITO,
+    TIPO_CREDITO,
+    DIAS_MORA,
+    VALOR_VENCIDO,
+    ESTADO_CREDITO, 
+    COALESCE(VALOR_FACTURADO_CXCRED, 0) AS VALOR_FACTURADO_CXCRED
+FROM BASE
+WHERE RN = 1;

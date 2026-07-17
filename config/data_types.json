@@ -1,0 +1,14 @@
+{
+    "raw_data":{
+        "CEDULA":"int",
+        "NOMBRE_ASOCIADO":"str",
+        "ESTM_NOMBRE":"str",
+        "NUMERO_CREDITO":"int",
+        "TIPO_CREDITO":"str",
+        "DIAS_MORA":"int",
+        "VALOR_VENCIDO":"float",
+        "ESTADO_CREDITO": "str",
+        "CORTE": "str", 
+        "VALOR_FACTURADO_CXCRED": "float"
+    }
+}

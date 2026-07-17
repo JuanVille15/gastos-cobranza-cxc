@@ -1,0 +1,12 @@
+queries:
+  "validacion_actualizacion": "sql/validar_actualizacion_gcc.sql"
+  "Fallecidos": "sql/estados_fallecidos.sql"
+
+params:
+  estados_excluidos: [CASTIGADO]
+  subcampannas: [PROCOBAS]
+
+paths:
+  juridicos_insolvencias: "//servidor/ruta/a/Procesos_Juridicos_Activos"
+  salida_compartida: "//servidor/ruta/a/Resultado_Automatizacion"
+  asignacion: "//servidor/ruta/a/Asignacion/Resultado/Archivo_Inicial"

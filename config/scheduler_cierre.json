@@ -1,0 +1,17 @@
+{
+    "cierres": [
+      { "periodo": "2026-01", "fecha_cierre": "2026-02-03" },
+      { "periodo": "2026-02", "fecha_cierre": "2026-03-03" },
+      { "periodo": "2026-03", "fecha_cierre": "2026-04-01" },
+      { "periodo": "2026-04", "fecha_cierre": "2026-05-04" },
+      { "periodo": "2026-05", "fecha_cierre": "2026-06-02" },
+      { "periodo": "2026-06", "fecha_cierre": "2026-07-01" },
+      { "periodo": "2026-07", "fecha_cierre": "2026-08-03" },
+      { "periodo": "2026-08", "fecha_cierre": "2026-09-01" },
+      { "periodo": "2026-09", "fecha_cierre": "2026-10-01" },
+      { "periodo": "2026-10", "fecha_cierre": "2026-11-04" },
+      { "periodo": "2026-11", "fecha_cierre": "2026-12-01" },
+      { "periodo": "2026-12", "fecha_cierre": "2027-01-04" }
+    ]
+  }
+  

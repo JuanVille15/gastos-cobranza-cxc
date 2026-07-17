@@ -1,0 +1,40 @@
+{
+    "version": "2026-01",
+    "tramos": [
+      {
+        "codigo": "TRAMO_31_60",
+        "descripcion": "31 a 60 días de mora",
+        "dias_min": 31,
+        "dias_max": 60,
+        "porcentaje": 0.0714
+      },
+      {
+        "codigo": "TRAMO_61_90",
+        "descripcion": "61 a 90 días de mora",
+        "dias_min": 61,
+        "dias_max": 90,
+        "porcentaje": 0.1071
+      },
+      {
+        "codigo": "TRAMO_91_120",
+        "descripcion": "91 a 120 días de mora",
+        "dias_min": 91,
+        "dias_max": 120,
+        "porcentaje": 0.119
+      },
+      {
+        "codigo": "TRAMO_121_150",
+        "descripcion": "121 a 150 días de mora",
+        "dias_min": 121,
+        "dias_max": 150,
+        "porcentaje": 0.119
+      },
+      {
+        "codigo": "TRAMO_GT150",
+        "descripcion": "Mayor a 150 días de mora",
+        "dias_min": 151,
+        "dias_max": null,
+        "porcentaje": 0.119
+      }
+    ]
+  }
