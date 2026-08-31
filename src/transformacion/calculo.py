@@ -122,9 +122,10 @@ def calcular_gastos(df_cartera:pd.DataFrame) -> pd.DataFrame:
         df_cartera.loc[df_cartera['TRAMO_MORA'] == nombre_tramo, 
                        'VALOR_GASTO_CALCULADO_PROYECTADO'] = np.floor(df_cartera['VALOR_VENCIDO'] 
                                                            * porcentaje) # -- Se redondea hacia abajo el valor del gasto calculado para evitar decimales
-
+                       
+    # --- Se dejan solo las filas donde > 10_0000 --- #
     
-    return df_cartera
+    return df_cartera[df_cartera['VALOR_GASTO_CALCULADO_PROYECTADO'] > 10_000]
 
 def calcular_participacion(df_cartera:pd.DataFrame) -> pd.DataFrame:
 
