@@ -125,7 +125,7 @@ def calcular_gastos(df_cartera:pd.DataFrame) -> pd.DataFrame:
                        
     # --- Se dejan solo las filas donde > 10_0000 --- #
     
-    return df_cartera[df_cartera['VALOR_GASTO_CALCULADO_PROYECTADO'] > 10_000]
+    return df_cartera[df_cartera['VALOR_GASTO_CALCULADO_PROYECTADO'] >= 10_000]
 
 def calcular_participacion(df_cartera:pd.DataFrame) -> pd.DataFrame:
 
